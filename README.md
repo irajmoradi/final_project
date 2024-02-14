@@ -7,8 +7,8 @@ This is a project which utilizes Flask, Docker, Gunicorn, and Nginx to create an
 ### Setup
 Clone this repo, and enter the root of the project.
 ```
-$git clone https://github.com/irajmoradi/flask-on-docker.git
-$cd flask-on-docker
+$ git clone https://github.com/irajmoradi/flask-on-docker.git
+$ cd flask-on-docker
 ```
 
 ### Production
