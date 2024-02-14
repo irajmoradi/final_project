@@ -3,6 +3,14 @@
 This is a project which utilizes Flask, Docker, Gunicorn, and Nginx to create an docker 'app' which allows for the uploading and viewing of static image files. The 'app' uses Postgres to handle the databases. This repo was made using the following [tutorial](https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/). This project was done to develop my skills in understanding how docker containers work and the use of docker with databases. Below is a gif showing off what uploading a image to the 'app' and viewing the image looks like. 
 ![Show Off Uploading](uploading.gif)
 ## Run Instructions
+
+### Setup
+Clone this repo, and enter the root of the project.
+```
+$git clone https://github.com/irajmoradi/flask-on-docker.git
+$cd flask-on-docker
+```
+
 ### Production
 To run the production version of the container make sure to create a .env.prod.db file with the username, password, and database name, and put it into the root folder. 
 Run the commands
