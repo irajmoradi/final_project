@@ -1,0 +1,25 @@
+name: Database and Web App Tests
+on:
+  push:
+    branches: ['*']
+  pull_request:
+    branches: ['*']
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      run: |
+        pip3 install -r requirements.txt
+    - name: Start Docker Containers
+      run: |
+        docker-compose up -d --build
+        sleep 20  # Wait for services to be fully up and running.
+    - name: Load Data
+      run: |
+        ./load_batch.sh
+    - name: Run Database Tests
+      run: |
+        docker-compose exec -T db bash -c "chmod +x /run_tests.sh && /run_tests.sh"
+
