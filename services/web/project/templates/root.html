@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Home</h2>
+<p>Welcome to the Twitter clone.</p>
+<div>
+  <h3>Recent Tweets</h3>
+  {% if messages %}
+    {% for message in messages %}
+      <div class="tweet">
+        <strong>{{ message.screen_name }}</strong>
+        <p>{{ message.text }}</p>
+        <small>Posted on {{ message.created_at }}</small>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No more tweets to show.</p>
+  {% endif %}
+</div>
+<div class="pagination">
+  {% if page > 1 %}
+    <a href="{{ url_for('hello_world', page=page-1) }}">Previous</a>
+  {% endif %}
+  <a href="{{ url_for('hello_world', page=page+1) }}">Next</a>
+</div>
+{% endblock %}
+

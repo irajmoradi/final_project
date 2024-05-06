@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create New Tweet</h2>
+
+{% if error_message %}
+<p style='color: red;'>{{ error_message }}</p>
+{% endif %}
+
+<form action="{{ url_for('create_message') }}" method="post">
+    <div class="form-group">
+        <label for="messageText">Your Tweet:</label>
+        <textarea class="form-control" id="messageText" name="text" rows="3" placeholder="What's happening?" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Tweet</button>
+</form>
+{% endblock %}
+

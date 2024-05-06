@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create Account</h2>
+
+{% if error_message %}
+<p style='color: red;'>
+    ERROR: {{ error_message }}
+</p>
+{% endif %}
+
+<form action='/create_user' method="POST">
+    <table>
+        <tr>
+            <td>Email</td>
+            <td><input type="username" name="username" required></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" required></td>
+        </tr>
+        <tr>
+            <td>Confirm Password</td>
+            <td><input type="password" name="confirm_password" required></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="submit" value="Create Account"></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}
+
