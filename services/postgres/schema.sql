@@ -1,6 +1,7 @@
 
 \set ON_ERROR_STOP on
 BEGIN;
+CREATE EXTENSION rum;
 
 /*
  * Users may be partially hydrated with only a name/screen_name 
@@ -8,7 +9,7 @@ BEGIN;
  * inside of a tweet someone else's tweet.
  */
 CREATE TABLE users (
-    id_users BIGINT PRIMARY KEY,
+    id_users BIGSERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     urls TEXT,
@@ -20,6 +21,7 @@ CREATE TABLE users (
     verified BOOLEAN,
     screen_name TEXT,
     name TEXT,
+    password TEXT,
     location TEXT,
     description TEXT,
     withheld_in_countries VARCHAR(2)[]
@@ -29,7 +31,7 @@ CREATE TABLE users (
  * Tweets may be entered in hydrated or unhydrated form.
  */
 CREATE TABLE tweets (
-    id_tweets BIGINT PRIMARY KEY,
+    id_tweets BIGSERIAL PRIMARY KEY,
     id_users BIGINT,
     created_at TIMESTAMPTZ,
     in_reply_to_status_id BIGINT,
@@ -53,6 +55,11 @@ CREATE TABLE tweet_urls (
     urls TEXT,
     PRIMARY KEY(id_tweets, urls)
 );
+CREATE INDEX tweets_text_rum_idx ON tweets USING rum (to_tsvector('english', text) rum_tsvector_ops);
+
+
+CREATE INDEX idx_tweets_created_at_id_tweets ON tweets(created_at DESC, id_tweets);
+CREATE INDEX idx_users_screen_name ON users(screen_name);
 
 /*
  * Precomputes the total number of occurrences for each hashtag
