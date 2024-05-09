@@ -1,5 +1,16 @@
 {% extends 'base.html' %}
 
+{% block head %}
+<style>
+    .highlighted {
+        font-style: italic;
+        background-color: lightblue;
+        padding: 0.1em 0.2em;
+        border-radius: 3px;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <h2>Search Tweets</h2>
 <form action="{{ url_for('search') }}" method="get">
@@ -28,3 +39,4 @@
     <p>No results found.</p>
 {% endif %}
 {% endblock %}
+

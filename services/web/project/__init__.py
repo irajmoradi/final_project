@@ -19,7 +19,7 @@ import sqlalchemy
 app = Flask(__name__)
 app.config.from_object("project.config.Config")
 db = SQLAlchemy(app)
-psql_connection = "postgresql://hello_flask:hello_flask@db:5432/hello_flask_dev"
+psql_connection = "postgresql://hello_flask:hello_flask@db:5432/hello_flask_prod"
 
 
 
@@ -34,6 +34,7 @@ class User(db.Model):
         self.email = email
         self.password = password
 
+
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
@@ -43,9 +44,10 @@ def search():
     username = request.cookies.get('username')
     password = request.cookies.get('password')
     good_credentials = are_credentials_good(username, password)
+
     if query:
         sqlcommand = """
-        SELECT u.screen_name, t.text, ts_headline(t.text, plainto_tsquery(:query)) AS highlighted_text, t.created_at
+        SELECT u.screen_name, t.text, ts_headline('english', t.text, plainto_tsquery(:query)) AS highlighted_text, t.created_at
         FROM tweets t
         JOIN users u ON t.id_users = u.id_users
         WHERE to_tsvector('english', t.text) @@ plainto_tsquery(:query)
@@ -57,14 +59,16 @@ def search():
         result = connection.execute(text(sqlcommand), {'query': query, 'limit': messages_per_page, 'offset': offset}).fetchall()
         connection.close()
 
-        messages = [{'screen_name': msg[0], 'highlighted_text': msg[2], 'created_at': msg[3]} for msg in result]
+        messages = []
+        for row in result:
+            highlighted_text = row[2]
+            highlighted_text = highlighted_text.replace('<b>', '<span class="highlighted">')
+            highlighted_text = highlighted_text.replace('</b>', '</span>')
+            messages.append({'text': row[1], 'created_at': row[3], 'screen_name': row[0], 'highlighted_text': highlighted_text})
     else:
         messages = []
 
-    return render_template('search.html', logged_in = good_credentials, messages=messages, query=query, page=page)
-
-
-
+    return render_template('search.html', logged_in=good_credentials, messages=messages, query=query, page=page)
 
 @app.route("/")
 def hello_world():
